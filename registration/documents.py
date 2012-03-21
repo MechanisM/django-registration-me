@@ -94,6 +94,9 @@ class RegistrationProfile(User):
                 profile.is_active = True
                 profile.activation_key = cls.ACTIVATED
                 profile.save()
+                # Forget that User was RegistrationProfile
+                User._collection.update({'username': profile.username},
+                    {'$set': {'_cls': 'User', '_types': ['User']}})
                 return profile
         return False
     
